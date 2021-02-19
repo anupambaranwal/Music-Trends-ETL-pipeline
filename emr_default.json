@@ -1,0 +1,46 @@
+{
+  "Name": "spark-emr-cluster",
+  "LogUri": "s3://emr-logs-anupam",
+  "ReleaseLabel": "emr-5.28.0",
+  "Applications": [
+    {
+      "Name": "Spark"
+    }
+  ],
+  "Configurations": [
+    {
+      "Classification": "spark-env",
+      "Configurations": [
+        {
+          "Classification": "export",
+          "Properties": {
+            "PYSPARK_PYTHON": "/usr/bin/python3"
+          }
+        }
+      ]
+    }
+  ],
+  "Instances": {
+    "InstanceGroups": [
+      {
+        "Name": "Master nodes",
+        "Market": "ON_DEMAND",
+        "InstanceRole": "MASTER",
+        "InstanceType": "m4.large",
+        "InstanceCount": 1
+      },
+      {
+        "Name": "Slave nodes",
+        "Market": "ON_DEMAND",
+        "InstanceRole": "CORE",
+        "InstanceType": "m4.large",
+        "InstanceCount": 4
+      }
+    ],
+    "KeepJobFlowAliveWhenNoSteps": false,
+    "TerminationProtected": false
+  },
+  "VisibleToAllUsers": true,
+  "JobFlowRole": "EMR_EC2_DefaultRole",
+  "ServiceRole": "EMR_DefaultRole"
+}

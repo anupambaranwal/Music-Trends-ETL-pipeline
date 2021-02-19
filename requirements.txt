@@ -1,0 +1,14 @@
+<<<<<<< HEAD
+apache-airflow
+psycopg2-binary
+celery
+pandas
+pyspark
+=======
+apache-airflow
+psycopg2-binary
+celery
+pandas
+pyspark
+>>>>>>> 912ba2077923b39875721984722a3cb5460b3124
+jupyter
