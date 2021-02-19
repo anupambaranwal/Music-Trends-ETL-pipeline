@@ -38,6 +38,7 @@ Music-Trends-ETL--pipeline
 │   └───genre_data                          
 │   └───lyrics_data                          
 │   └───playlist_data 
+│   └───unzip_files.py                          # Extracts all zip files in the folder
 |   
 |___assets                                      # Screenshot of various required files
 │       └───load_raw.JPG                        # Move data and scripts to s3 DAG Graph View
