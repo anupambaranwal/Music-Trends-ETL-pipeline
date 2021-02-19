@@ -30,6 +30,7 @@ Music-Trends-ETL--pipeline
 │   README.md                                    # Project description
 │   requirements.txt                             # Python dependencies
 |   emr_default.json                             # EMR cluster configuration
+|   dl.cfg                                       # configration file
 |
 |___dataset
 |   |
@@ -104,6 +105,7 @@ Two data lakes are constructed:
 | Create_EMR_cluster | EmrCreateJobFlowOperator | Creates an EMR Cluster |
 | Add_jobflow_steps | EmrAddStepsOperator | Adds steps to an existing EMR JobFlow|
 | genre_processing_step,<br/>palylsit_processing_step,<br/>charts_processing_step,<br/>lyrics_processing_step,<br/>artists_processing_step | EmrStepSensor | Asks for the state of the step until it reaches<br/> a terminal state|
+|data_quality_check | EmrStepSensor | Checks the weather the tables created<br/> meet the specified goals|
 | Stop_execution | DummyOperator | Dummy task with no action |
 
 ### Installation
