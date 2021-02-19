@@ -144,6 +144,9 @@ In the navigation bar of the Airflow UI click on 'DAGs', then turn `ON` the `emr
 
 This pipeline extracts the data from our raw data lake, transforms is using Spark on an EMR cluster and saves it in way that is optimizing our query efficiency. Wait until the pipeline has successfully completed (it should take around 15 minutes).
 
+#### Data quality check
+Data should meet the specified goals, to ensure this many quality check are done on the data. The quality checks such as count of columns are matching to ensure completeness, data type of the columns are matching, no null values are present in primary key are used.
+
 ### Addressing Other Scenarios
 **1. The data was increased by 100x**
    
