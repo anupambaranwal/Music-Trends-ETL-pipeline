@@ -3,7 +3,7 @@ from datetime import datetime
 import os
 import sys
 from pyspark.sql import SparkSession
-from pyspark.sql import functions as F
+from pyspark.sql.functions import count
 from pyspark.sql.types import DateType
 
 
@@ -15,52 +15,59 @@ def create_spark_session():
     return spark
 
 
-def check_region_data(spark, datalake_bucket):
-    region_df = spark.read.parquet(os.path.join(datalake_bucket, 'music_table/*.parquet'))
+def check_music_data(spark, datalake_bucket):
+    music_df = spark.read.parquet(os.path.join(datalake_bucket, 'music_table/*.parquet'))
 
-    if region_df.count() == 0:
+    if music_df.count() == 0:
         raise AssertionError('Music table is empty.')
 
+    if music_df.where(col("track_id").isNull()):
+        raise AssertionError('Primary key cannot be null.')
 
-def check_region_data(spark, datalake_bucket):
-    region_df = spark.read.parquet(os.path.join(datalake_bucket, 'lyrics_table/*.parquet'))
 
-    if region_df.count() == 0:
+def check_lyrics_data(spark, datalake_bucket):
+    lyrics_df = spark.read.parquet(os.path.join(datalake_bucket, 'lyrics_table/*.parquet'))
+
+    if lyrics_df.count() == 0:
         raise AssertionError('Lyrics table is empty.')
 
+    if lyrics_df.select(F.countDistinct("track_name")) != lyrics_df.select(F.count("track_name")):
+        raise AssertionError('Primary key should be unique.')
 
-def check_station_data(spark, datalake_bucket):
-    station_df = spark.read.parquet(os.path.join(datalake_bucket, 'track_table/*.parquet'))
 
-    if station_df.count() == 0:
+def check_track_data(spark, datalake_bucket):
+    track_df = spark.read.parquet(os.path.join(datalake_bucket, 'track_table/*.parquet'))
+
+    if track_df.count() == 0:
         raise AssertionError('Track table is empty.')
 
+    if dict(track_df.dtypes)[count_words] != 'int':
+        raise AssertionError('Data type mis-match.')
 
-def check_weather_data(spark, datalake_bucket):
-    weather_df = spark.read.parquet(os.path.join(datalake_bucket, 'song_table/*.parquet'))
 
-    if weather_df.count() == 0:
+def check_song_data(spark, datalake_bucket):
+    song_df = spark.read.parquet(os.path.join(datalake_bucket, 'song_table/*.parquet'))
+
+    if song_df.count() == 0:
         raise AssertionError('Song table is empty.')
 
-def check_region_data(spark, datalake_bucket):
-    region_df = spark.read.parquet(os.path.join(datalake_bucket, 'artists_table/*.parquet'))
+def check_artists_data(spark, datalake_bucket):
+    artists_df = spark.read.parquet(os.path.join(datalake_bucket, 'artists_table/*.parquet'))
 
-    if region_df.count() == 0:
+    if artists_df.count() == 0:
         raise AssertionError('Artists table is empty.')
 
-def check_region_data(spark, datalake_bucket):
-    region_df = spark.read.parquet(os.path.join(datalake_bucket, 'features_table/*.parquet'))
+def check_features_data(spark, datalake_bucket):
+    features_df = spark.read.parquet(os.path.join(datalake_bucket, 'features_table/*.parquet'))
 
-    if region_df.count() == 0:
+    if features_df.count() == 0:
         raise AssertionError('Aeatures table is empty.')
 
 
 def main():
     if len(sys.argv) == 2:
-        # aws cluster mode
         datalake_bucket = sys.argv[1]
     else:
-        # local mode
         config = configparser.ConfigParser()
         config.read('../dl.cfg')
 
@@ -71,11 +78,11 @@ def main():
 
     spark = create_spark_session()
 
-    check_trip_data(spark, datalake_bucket)
-    check_time_data(spark, datalake_bucket)
-    check_station_data(spark, datalake_bucket)
-    check_weather_data(spark, datalake_bucket)
-    check_region_data(spark, datalake_bucket)
+    check_music_data(spark, datalake_bucket)
+    check_lyrics_data(spark, datalake_bucket)
+    check_track_data(spark, datalake_bucket)
+    check_song_data(spark, datalake_bucket)
+    check_features_data(spark, datalake_bucket)
 
 if __name__ == "__main__":
     main()
