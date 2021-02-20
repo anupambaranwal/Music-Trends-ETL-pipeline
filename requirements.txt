@@ -4,3 +4,4 @@ celery
 pandas
 pyspark
 jupyter
+billboard.py
