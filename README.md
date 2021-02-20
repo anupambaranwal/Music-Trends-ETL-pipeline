@@ -1,6 +1,6 @@
-# Music-Trends-ETL--pipeline
+# Music Trends ETL Pipeline
 
-## Data Engineering NanoDegree Capstone Project
+## Data Engineering Udacity Nanodegree Capstone Project
 
 ### Project Summary
 Music has changed a lot through time and every music have its unique style and rhythm. As more and more music are released people have the need to access information regarding the latest trends quickly, using reliable methods. This project aims to organize  the information available to better allow an analysis of the evolving trends in music.
@@ -10,11 +10,11 @@ Using API of various services like Spotify, Billboard, Genius data is collected.
 This project is the capstone project for Udacity Data Engineering Nanodegree.The purpose of the capstone project is to combine the skills and expertise acquired during the data engineering nanodegree to accomplish data engineering tasks.
 
 ### Technology Stack
-1. AWS S3 - For string data lake Amazon S3 is used, which is is an object storage service that offers industry-leading scalability, data availability, security, and performance. S3 is a perfect places for storing our data partitioned and grouped in files. It has low cost and a lot of flexibility.
+1. **AWS S3** - For string data lake Amazon S3 is used, which is is an object storage service that offers industry-leading scalability, data availability, security, and performance. S3 is a perfect places for storing our data partitioned and grouped in files. It has low cost and a lot of flexibility.
 
-2. Apache Spark and Amazon EMR - For ETL data processing Apache Spark and Amazon EMR is being used because of the capacity to process large amounts of data. Sprak provides great performance because it stores the data in-memory shared across the cluster.
+2. **Apache Spark and Amazon EMR** - For ETL data processing Apache Spark and Amazon EMR is being used because of the capacity to process large amounts of data. Sprak provides great performance because it stores the data in-memory shared across the cluster.
 
-3. Apache Airflow -  Airflow provides an intuitive UI where we can track the progress and bottlenecks of our pipelines.
+3. **Apache Airflow** -  Airflow provides an intuitive UI where we can track the progress and bottlenecks of our pipelines.
 
 ### ETL Flow
 
@@ -70,9 +70,9 @@ Music-Trends-ETL--pipeline
 
 ### Data Model
 Two data lakes are constructed:
-1. Raw Data Lake - The purpose of this data lake is to represent a single source of truth and to store data generated from different sources in raw format. In data lake raw data is retained, as we can always go back to our raw data lake and change our ETL process or easily add new pipelines.
+1. **Raw Data Lake** - The purpose of this data lake is to represent a single source of truth and to store data generated from different sources in raw format. In data lake raw data is retained, as we can always go back to our raw data lake and change our ETL process or easily add new pipelines.
 
-2. Optimized Data Lake - This is what we are using for analytics. The data is prepared, compressed and partitioned by certain  columns to 
+2. **Optimized Data Lake** - This is what we are using for analytics. The data is prepared, compressed and partitioned by certain  columns to 
     allow for fast query times.
 
 ![data model](https://github.com/anupam-b/Music-Trends-ETL-pipeline/blob/main/assets/ERD.jpg)
@@ -82,7 +82,7 @@ Two data lakes are constructed:
 ### Data Pipelines
  
  There are two DAGs in the project:
- 1. Load_raw_dag -  This pipeline creates the three S3 buckets,one for our raw data, the second for our data lake and a 3rd bucket for our scripts, and uploads the data from local machine.  
+ 1. **Load_raw_dag** -  This pipeline creates the three S3 buckets,one for our raw data, the second for our data lake and a 3rd bucket for our scripts, and uploads the data from local machine.  
 ![load_raw_dag](https://github.com/anupam-b/Music-Trends-ETL-pipeline/blob/main/assets/load_raw.JPG)
 
 | Step | Type | Description |
@@ -96,30 +96,27 @@ Two data lakes are constructed:
 | Stop_execution | DummyOperator | Dummy task with no action |
 
 
-2. EMR_etl_dag - This pipeline extracts the data from raw data bucket, transforms it with Spark cluster on EMR to create dimension and fact tables and writes it back to S3 in a data lake.
+2. **EMR_etl_dag** - This pipeline extracts the data from raw data bucket, transforms it with Spark cluster on EMR to create dimension and fact tables and writes it back to S3 in a data lake.
 ![emr_etl_dag](https://github.com/anupam-b/Music-Trends-ETL-pipeline/blob/main/assets/emr_etl.JPG)
 
 | Step | Type | Description |
 | --- | --- | --- |
 | Begin_execution | DummyOperator | Dummy task with no action |
 | Create_EMR_cluster | EmrCreateJobFlowOperator | Creates an EMR Cluster |
-| Add_jobflow_steps | EmrAddStepsOperator | Adds steps to an existing EMR JobFlow|
-| genre_processing_step,<br/>palylsit_processing_step,<br/>charts_processing_step,<br/>lyrics_processing_step,<br/>artists_processing_step | EmrStepSensor | Asks for the state of the step until it reaches<br/> a terminal state|
+| add_jobflow | EmrAddStepsOperator | Adds steps to an existing EMR JobFlow|
+| genre_processing,<br/>palylsit_processing,<br/>charts_processing,<br/>lyrics_processing,<br/>artists_processing | EmrStepSensor | Asks for the state of the step until it reaches<br/> a terminal state|
 |data_quality_check | EmrStepSensor | Checks the weather the tables created<br/> meet the specified goals|
 | Stop_execution | DummyOperator | Dummy task with no action |
 
 ### Installation
 #### Clone the repo from github by running:
 ```
-git clone git@github.com:jonathankamau/udend-capstone-project.git
+git clone git@github.com:anupam-b/Music-Trends-ETL-pipeline.git
 ```
 #### Install requirements
 ```
 pip install -r requirements.txt
 ```
-#### Start Ariflow UI
-Access localhost:8080 in your browser and login to Airflow.
-
 #### Configure Airflow
 -  **Airflow connections**
     
